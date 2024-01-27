@@ -12,7 +12,7 @@ const Header = () => (
 						<div className="flex h-16 items-center justify-between">
 							{/* Logo (lg+) */}
 							<div className="hidden lg:flex lg:items-center">
-								<a href="#">
+								<a href="/">
 									<span className="sr-only">Preact E-Commerce</span>
 									<img
 										className="h-8 w-auto"
@@ -32,8 +32,8 @@ const Header = () => (
 							</div>
 
 							{/* Logo (lg-) */}
-							<a href="#" className="lg:hidden">
-								<span className="sr-only">Your Company</span>
+							<a href="/" className="lg:hidden">
+								<span className="sr-only">Preact E-Commerce</span>
 								<img
 									src="../../assets/preact-logo.svg"
 									alt=""
