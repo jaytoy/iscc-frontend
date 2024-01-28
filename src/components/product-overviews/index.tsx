@@ -1,6 +1,8 @@
 import { RadioGroup } from '@headlessui/react';
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/cart.slice';
 
 
 function classNames(...classes) {
@@ -62,6 +64,8 @@ const getAvailableSizes = (colorId, colorSizeCombinations) => {
 };
 
 const ProductOverviews = ({ productData, uniqueColors }: Props) => {
+  const dispatch = useDispatch();
+
   // State to keep track of the selected color
 	const [selectedColor, setSelectedColor] = useState(uniqueColors[0]);
 	const [availableSizes, setAvailableSizes] = useState(getAvailableSizes(selectedColor.id, productData.product.color_size_combinations));
@@ -104,7 +108,7 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
           </div>
 
           <div className="mt-8 lg:col-span-5">
-            <form>
+            <div>
               {/* Color picker */}
               <div>
                 <h2 className="text-sm font-medium text-gray-900">Color</h2>
@@ -175,12 +179,12 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
               </div>
 
               <button
-                type="submit"
+                onClick={() => dispatch(addToCart(productData.product))}
                 className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Add to cart
               </button>
-            </form>
+            </div>
 
             {/* Product details */}
             <div className="mt-10">
