@@ -55,29 +55,64 @@ const getAvailableSizes = (colorId, colorSizeCombinations) => {
     return [];
   }
 
-  return colorSizeCombinations
+  // Define the order of sizes
+  const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+  // Filter and map the sizes
+  const sizes = colorSizeCombinations
     .filter(item => item.color.id === colorId)
     .map(item => ({
       ...item.size,
+      quantity: item.availability,
       inStock: item.availability > 0
     }));
+
+  // Sort sizes based on the sizeOrder array
+  return sizes.sort((a, b) => sizeOrder.indexOf(a.abbreviation) - sizeOrder.indexOf(b.abbreviation));
 };
 
 const ProductOverviews = ({ productData, uniqueColors }: Props) => {
   const dispatch = useDispatch();
 
   // State to keep track of the selected color
-	const [selectedColor, setSelectedColor] = useState(uniqueColors[0]);
-	const [availableSizes, setAvailableSizes] = useState(getAvailableSizes(selectedColor.id, productData.product.color_size_combinations));
-	const [selectedSize, setSelectedSize] = useState(availableSizes[0]);
+	const [selectedColor, setSelectedColor] = useState<string>(uniqueColors[0].id);
+  const [availableSizes, setAvailableSizes] = useState(getAvailableSizes(selectedColor, productData.product.color_size_combinations));
+	const [selectedSize, setSelectedSize] = useState<string>(null);
+
+  const handleAddToCart = () => {
+    // Update the cart state
+    dispatch(addToCart(productData.product));
+
+    // Send the product data to the server
+    fetch(`http://localhost:8000/add-to-cart/${productData.product.slug}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        product_id: productData.product.id,
+        product_name: productData.product.name,
+        product_slug: productData.product.slug,
+        size: selectedSize,
+        color_id: selectedColor,
+        quantity: 1
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .catch(err => console.error(err));
+  }
+
+  useEffect(() => {
+    if (availableSizes.filter(size => size.abbreviation == selectedSize && size.quantity == 0)) { 
+      setSelectedSize(null); 
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availableSizes]);
 
 	useEffect(() => {
     if (productData && productData.product.color_size_combinations) {
-      const newAvailableSizes = getAvailableSizes(selectedColor.id, productData.product.color_size_combinations);
+      const newAvailableSizes = getAvailableSizes(selectedColor, productData.product.color_size_combinations);
       setAvailableSizes(newAvailableSizes);
-      if (!newAvailableSizes.some(size => size.id === selectedSize.id)) {
-        setSelectedSize(newAvailableSizes.length > 0 ? newAvailableSizes[0] : null);
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColor, productData]);
@@ -119,7 +154,7 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
                     {uniqueColors.map((color) => (
                       <RadioGroup.Option
                         key={color.name}
-                        value={color}
+                        value={color.id}
                         className={({ active, checked }) =>
                           classNames(
                             color.ring_color,
@@ -151,14 +186,13 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
                     See sizing chart
                   </a>
                 </div>
-
                 <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-2">
                   <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
                   <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                     {availableSizes.map((size) => (
                       <RadioGroup.Option
                         key={size.abbreviation}
-                        value={size}
+                        value={size.abbreviation}
                         className={({ active, checked }) =>
                           classNames(
                             size.inStock ? 'cursor-pointer focus:outline-none' : 'cursor-not-allowed opacity-25',
@@ -179,7 +213,7 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
               </div>
 
               <button
-                onClick={() => dispatch(addToCart(productData.product))}
+                onClick={handleAddToCart}
                 className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Add to cart
