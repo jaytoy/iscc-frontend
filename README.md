@@ -1,19 +1,42 @@
-# frontend
+# README for Frontend
 
-## CLI Commands
+This README provides instructions on how to set up and run the frontend part of the ecommerce application using [Preact](https://preactjs.com/).
 
-- `npm install`: Installs dependencies
+## Setup Instructions
 
-- `npm run dev`: Run a development, HMR server
+1. ### Clone this repository
+2. ### Install dependencies
 
-- `npm run serve`: Run a production-like server
+   Navigate to the project directory and install the dependencies using npm:
 
-- `npm run build`: Production-ready build
+   ```
+   npm install
+   ```
 
-- `npm run lint`: Pass TypeScript files using ESLint
+3. ### Running the application
 
-- `npm run test`: Run Jest and Enzyme with
-  [`enzyme-adapter-preact-pure`](https://github.com/preactjs/enzyme-adapter-preact-pure) for
-  your tests
+   Start the preact application by running:
 
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+   ```
+   npm run dev
+   ```
+
+## Build for Production
+
+To build the application, run:
+
+```
+npm run build
+```
+
+## Accessing the Application
+
+Once the server is running, you can access the Preact frontend application in your web browser at the following address:
+
+```
+localhost:8080
+```
+
+## Important Note
+
+In order to fully use the frontend application, ensure that the backend application is running concurrently. The frontend relies on the backend for full functionality. The backend code of the application can be found [here](https://github.com/jaytoy/iscc-backend).
