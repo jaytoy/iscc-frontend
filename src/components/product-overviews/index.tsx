@@ -42,19 +42,21 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
   const [availableSizes, setAvailableSizes] = useState(getAvailableSizes(selectedColor, productData.product.color_size_combinations));
 	const [selectedSize, setSelectedSize] = useState<string>(null);
 
-
-  useEffect(() => {
-    if (availableSizes.filter(size => size.abbreviation == selectedSize && size.quantity == 0)) { 
-      setSelectedSize(null); 
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availableSizes]);
-
 	useEffect(() => {
     if (productData && productData.product.color_size_combinations) {
       const newAvailableSizes = getAvailableSizes(selectedColor, productData.product.color_size_combinations);
       setAvailableSizes(newAvailableSizes);
+
+      // Check if the selected size is available in the new color with quantity > 0
+      const isSizeAvailable = newAvailableSizes.some(size => 
+        size.abbreviation === selectedSize && size.quantity > 0
+      );
+
+      if (!isSizeAvailable) {
+        setSelectedSize(null);
+      }
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedColor, productData]);
 
