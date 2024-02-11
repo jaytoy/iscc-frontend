@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { addToCart } from '../../redux/cart.slice';
 import { Product } from '../../types';
+import { classNames } from '../../utils/helper-functions';
 
 
 interface Props {
@@ -40,7 +41,13 @@ const AddToCartButton = ({ productData, selectedSize, selectedColor }: Props) =>
   return (
     <button
       onClick={handleAddToCart}
-      className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      disabled={!selectedSize || !selectedColor}
+      className={
+        classNames(
+          (!selectedSize || !selectedColor) ? 'bg-indigo-300' : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+          'mt-8 flex w-full items-center justify-center rounded-md border border-transparent  px-8 py-3 text-base font-medium text-white '
+        )
+      }
     >
       Add to cart
     </button>
