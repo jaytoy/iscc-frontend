@@ -67,7 +67,7 @@ const ProductOverviews = ({ productData, uniqueColors }: Props) => {
           <div className="lg:col-span-5 lg:col-start-8">
             <div className="flex justify-between">
               <h1 className="text-xl font-medium text-gray-900">{productData.product.name}</h1>
-              <p className="text-xl font-medium text-gray-900">{productData.product.price}€</p>
+              <p className="text-xl font-medium text-gray-900">{productData.product.price.toFixed(2)}€</p>
             </div>
           </div>
 

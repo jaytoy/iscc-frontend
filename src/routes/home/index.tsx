@@ -49,14 +49,14 @@ const Home = () => {
 								className="h-full w-full object-cover object-center lg:h-full lg:w-full"
 							/>
 						</div>
-						<div className="mt-4 flex justify-between">
+						<div className="mt-4 ml-2 flex justify-between">
 							<h3 className="text-sm text-gray-700">
 								<Link href={`/products/${product.slug}`}>
 									<span aria-hidden="true" className="absolute inset-0" />
 									{product.name}
 								</Link>
 							</h3>
-							<p className="text-sm font-medium text-gray-900">{product.price}€</p>
+							<p className="text-sm font-medium text-gray-900">{product.price.toFixed(2)}€</p>
 						</div>
 					</div>
 				))}
